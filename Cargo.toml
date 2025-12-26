@@ -1,0 +1,53 @@
+[package]
+edition = "2024"
+
+name = "tower-http-response-cache"
+description = "tower-http-response-cache"
+version = "0.0.1"
+rust-version = "1.93"
+
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/tliron/tower-http-response-cache"
+documentation = "https://docs.rs/tower-http-response-cache"
+authors = ["Tal Liron"]
+
+readme = "../README.md"
+
+categories = ["caching", "web-programming::http-server"] # https://crates.io/category_slugs
+keywords = ["http", "tower", "cache", "moka"]
+
+[dependencies]
+axum = { optional = true, version = "0.8.8" }
+duration-str = "0.20.0"
+http = "1.4.0"
+http-body = "1.0.1"
+kutil = { version = "=0.0.5", features = ["std", "http", "immutable"] }
+moka = { optional = true, version = "0.12.13", features = ["future"] }
+tower = "0.5.3"
+tracing = "0.1.44"
+
+[dev-dependencies]
+tokio = { version = "1.49.0", features = ["rt-multi-thread"] }
+tower-http = { version = "0.6.8", features = ["trace"] }
+tracing-subscriber = { version = "0.3.22", features = [
+    "env-filter",
+    "local-time",
+    "parking_lot",
+] }
+
+[features]
+axum = ["dep:axum"]
+moka = ["dep:moka"]
+
+[[example]]
+name = "basic"
+required-features = ["axum", "moka"]
+
+[[example]]
+name = "advanced"
+required-features = ["axum", "moka"]
+
+# https://stackoverflow.com/a/61417700
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

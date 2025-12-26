@@ -1,0 +1,18 @@
+#!/bin/bash
+set -e
+
+HERE=$(dirname "$(readlink --canonicalize "$BASH_SOURCE")")
+. "$HERE/_env"
+. "$HERE/_start-http-server" "$ROOT/assets"
+
+cd "$ROOT"
+
+if [ "$1" = -n ]; then
+    NIGHTLY=+nightly
+    export RUSTFLAGS='-Z threads=8 --codegen linker=clang --codegen link-arg=--ld-path=wild'
+fi
+
+for E in $(cargo run --example 2>&1 | grep --extended-regexp '^    ' | sort); do
+    m "\nexample: $E\n" "$RED"
+	cargo $NIGHTLY run --quiet --example "$E" --features=blocking,async
+done
